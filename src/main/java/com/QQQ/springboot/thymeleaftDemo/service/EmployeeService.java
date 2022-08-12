@@ -14,4 +14,6 @@ public interface EmployeeService {
     public void save(Employee employee);
     
     public void deleteById(int id);
+    
+    public List<Employee> searchBy(String name);
 }

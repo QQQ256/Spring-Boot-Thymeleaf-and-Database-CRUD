@@ -13,4 +13,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>{//k
     //写个function，可以sort by lastName
     //这个是JPA MAGIC！！！！！！！！！！
     public List<Employee> findAllByOrderByLastNameAsc();
+    
+    public List<Employee> findByFirstNameContainsOrLastNameContainsAllIgnoreCase(String name, String name2);
 }

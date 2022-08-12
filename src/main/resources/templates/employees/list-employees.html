@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <!--  Add support for Thymeleaf Security -->
-
+<html lang="en" 
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <title>theEmployees</title>
@@ -14,17 +16,45 @@
     	return confirm("Are you sure you want to delete???");
     }
     </script>
+    
 </head>
 
 <body>
+    
+<div class="container">
+    <!-- roles of each employee -->
     <h3>theEmployees</h3>
     <hr>
-<div class="container">
-    <!-- add a button to add Employees -->
-    <a th:href="@{/employees/showFormForAdd}"
-       class="btn btn-primay btn-sm mb-3">
-    Add employees
-    </a>
+    
+    <div>
+        User: <span sec:authentication="name"></span>
+        <br>
+        Role(s): <span sec:authentication="principal.authorities"></span>
+        <br><br>
+    </div>
+    
+    <!-- add a button to add Employees && search -->
+    <form th:action="@{/employees/search}">
+        <div class="container">
+	        <div class="row">
+	           <div class="col-2 sm">
+	               <a th:href="@{/employees/showFormForAdd}"
+                   class="btn btn-primary mr-5 mb-3">
+                   Add employees
+                   </a>
+	           </div>
+	           
+	           <div class="col-3">
+	               <input class="form-control  ml-5 mr-sm-2 mb-3" type="search" name="employeeName" placeholder="Search by name" />
+	            </div>
+	            
+	            <div class="col-1">
+	               <button class="btn btn-success mb-3" type="submit">Search</button>
+	            </div>
+	        </div>
+        </div>
+        
+    </form>
     
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
@@ -45,22 +75,33 @@
                 
                 <!-- update button -->
                 <td>
-                    <!-- Update button -->
-                    <a th:href="@{/employees/showFormForUpdate(employeeId=${e.id})}"
-                       class="btn btn-info btn-sm">
+                    <!-- Update button with role authorization-->
+                    <div sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+                    
+                        <a th:href="@{/employees/showFormForUpdate(employeeId=${e.id})}"
+                           class="btn btn-info btn-sm">
                         Update
-                    </a>
+                        </a>
+                        
+                    </div>
                     
                     <!-- Delete -->
-                     <a th:href="@{/employees/delete(employeeId=${e.id})}"
-                        class="btn btn-info btn-danger"
-                        onclick="myFunction()">
+                    <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                        <a th:href="@{/employees/delete(employeeId=${e.id})}"
+	                       class="btn btn-info btn-danger"
+	                       onclick="myFunction()">
                         Delete
-                    </a>
+                        </a>
+                    </div>
+                   
                 </td>
             </tr>
         </tbody>
     </table>
+    
+     <form action="#" th:action="@{/logout}" method="post">
+      <input hidden type="submit" value="Sign Out" class="btn btn-outline-primary mt-2"/>
+     </form> 
 </div>
 </body>
 
