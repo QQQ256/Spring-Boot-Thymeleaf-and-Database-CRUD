@@ -17,6 +17,8 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         UserBuilder users = User.withDefaultPasswordEncoder();
         
+        //memory authentication
+        
         auth.inMemoryAuthentication()
             .withUser(users.username("john").password("test123").roles("EMPLOYEE"))
             .withUser(users.username("mary").password("test123").roles("EMPLOYEE", "MANAGER"))
@@ -33,7 +35,7 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/resources/**").permitAll()
             .and()
             .formLogin()
-                .loginPage("/employees/list")
+                .loginPage("/showMyLoginPage")
                 .loginProcessingUrl("/authenticateTheUser")
                 .permitAll()
             .and()
